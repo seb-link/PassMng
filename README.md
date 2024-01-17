@@ -30,7 +30,7 @@ A simple password manager script written in Python that uses SQLite for storing 
 - The script checks password entropy and issues a warning if the entropy is low, indicating a potential weak password.
 
 ## Issues
-If you have any Issue
+If you have any issue feel free to visite the [issue](https://github.com/seb-link/PassMng/issues) pages.
 
 
 ## License
