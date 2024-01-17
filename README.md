@@ -1,1 +1,37 @@
-# PassMng
+# Password Manager
+
+A simple password manager script written in Python that uses SQLite for storing passwords and implements encryption using Argon2 for key derivation and AES for data encryption.
+
+## Requirements
+- Python 3.x
+- `argon2-cffi` library (install using `pip install argon2-cffi`)
+- `pycryptodome` library (install using `pip install pycryptodome`)
+- `colorama` library (install using `pip install colorama`)
+
+## Usage
+
+1. Run the script:
+   ```bash
+   python password_manager.py
+
+2. You will be prompted with options:
+   - `1` - Encrypt the password database (creates a new encrypted database or re-encrypts an existing one).
+   - `2` - Decrypt the password database (requires the encryption key).
+   - `3` - View current passwords in the database.
+   - `4` - Add a new password entry to the database.
+   - `99` - Exit.
+
+3. Follow the instructions for each option:
+   - When encrypting or decrypting, you will be asked for a ciphering key. Make sure to remember it, as losing it can result in losing all stored passwords.
+   - When adding a new password, you can generate a random password by entering "RANDOM" when prompted for the password.
+
+## Security Warning
+- **Losing the encryption key can result in the loss of all stored passwords.**
+- The script checks password entropy and issues a warning if the entropy is low, indicating a potential weak password.
+
+## Issues
+If you have any Issue
+
+
+## License
+This project is licensed under the [GNU General Public License v3.0](LICENSE).
