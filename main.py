@@ -50,6 +50,19 @@ def addpwd(website,username,password) :
     except sqlite.DatabaseError as e:
         print('The database is still encrypted !')
         print(e)
+
+def fetchpwdbywebsite(website) :
+    try :
+        liste = list()
+        cursor.execute(f"SELECT * FROM PasswordManager")
+        entry = cursor.fetchall()
+        for i in entry :
+            if i[0] == website :
+                liste.append(i)
+        return liste
+    except sqlite.DatabaseError as e:
+        return f"the database is either corrupt or encrypted or non-existent {e}"
+    
 def fetchpwd() :
     try :
         cursor.execute(f"SELECT * FROM PasswordManager")
@@ -93,16 +106,20 @@ def encrypt() :
     stored_text = {"hash":hash,'nonce':base64.b64encode(nonce),'tag':base64.b64encode(tag),"ciphertext":base64.b64encode(ciphertext)}
     with open("pass.db","w") as f :
         json.dump(stored_text, f, cls=BytesEncoder)  
-
+print("""1.Encrypt
+2.Decrypt
+3.View all stocked password
+4.Add password
+5.Search password by website
+99.Exit""")
 while 1 :
-    choice = input('encrypt/decrypt/view current password/add password/exit ? (1/2/3/4/99) : ')
-
+    choice = input("""-> """)
     if choice == "2" :
         decrypt()
     elif choice == "1" :
         try :
             newdb()
-            print(Fore.RED + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD")
+            print(Fore.RED + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA")
             print(Fore.RESET)
             encrypt()
         except KeyboardInterrupt :
@@ -133,4 +150,5 @@ while 1 :
             continue
     if choice == "99" :
         exit()
-
+    if choice == "5" :
+        print(fetchpwdbywebsite(input("Website to search for : ")))
