@@ -12,7 +12,7 @@ A simple password manager script written in Python that uses SQLite for storing 
 
 1. Run the script:
    ```bash
-   python password_manager.py
+   python main.py
 
 2. You will be prompted with options:
    - `1` - Encrypt the password database (creates a new encrypted database or re-encrypts an existing one).
@@ -26,7 +26,7 @@ A simple password manager script written in Python that uses SQLite for storing 
    - When adding a new password, you can generate a random password by entering "RANDOM" when prompted for the password.
 
 ## Security Warning
-- **Losing the encryption key can result in the loss of all stored passwords.**
+- **Losing the encryption key can result in the loss of all stored passwords. No Key No Data.**
 - The script checks password entropy and issues a warning if the entropy is low, indicating a potential weak password.
 
 ## Issues

@@ -2,12 +2,13 @@ import secrets
 import json
 import sqlite3 as sqlite
 from Crypto.Cipher import AES
-from hashlib import md5
+from hashlib import sha256
 import getpass
 import base64
 import math
 import argon2
 from colorama import Fore
+from random import choice
 
 class BytesEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -55,12 +56,15 @@ def fetchpwd() :
         entry = cursor.fetchall()
         return entry
     except sqlite.DatabaseError :
-        return "The database is still encrypted !"
+        return "the database is either corrupt or encrypted or non-existent"
 
 def decrypt() :
     with open("pass.db","rb") as f :
         data = f.read()
-    info = json.loads(data)
+    try :
+        info = json.loads(data)
+    except UnicodeDecodeError :
+        print("either the databse is not encrypted or the database is corrupted")
     key = getpass.getpass("Enter ciphing key (will not echo) : ")
     try :
         ph.verify(info["hash"],key)
@@ -68,7 +72,8 @@ def decrypt() :
         print("The password is incorrect")
         del key
         return
-    key = md5(key.encode()).hexdigest()
+    key = sha256(key.encode()).hexdigest()
+    key = key[:32]
     cipher = AES.new(key.encode(), AES.MODE_EAX, base64.b64decode(info["nonce"]))
     data = cipher.decrypt_and_verify(base64.b64decode(info["ciphertext"]), base64.b64decode(info["tag"]))
     with open("pass.db","wb") as f :
@@ -80,7 +85,8 @@ def encrypt() :
         data = f.read()
     key = getpass.getpass("Enter ciphing key (will not echo) : ")
     hash = ph.hash(key)
-    key = md5(key.encode()).hexdigest()
+    key = sha256(key.encode()).hexdigest()
+    key = key[:32]
     cipher = AES.new(key.encode(), AES.MODE_EAX)
     ciphertext, tag = cipher.encrypt_and_digest(data)
     nonce = cipher.nonce
@@ -111,11 +117,13 @@ while 1 :
             password = getpass.getpass('password (will not echo) (write RANDOM for a random password): ')
             if password == "RANDOM" :
                 lenght = input("How long should the generated password should be ? : ")
-                secrets.token_urlsafe(int(lenght))
+                password = secrets.token_urlsafe(int(lenght))
                 print("Random password generated !")
             if entropy(password) <= 75 :
-                print(Fore.YELLOW + "WARNING : The password entropy is low ! this migh be a sign of a weak password ! Current entropy : %s" % entropy(password))
+                print(Fore.YELLOW + "WARNING : The password entropy is low ! this migh be a sign of a weak password ! Current entropy : %s" % round(entropy(password),1))
                 print(Fore.RESET)
+            print("Current entropy : %s" % round(entropy(password),1))
+            print(f"If your password is random it will take approximatively {2**(round(entropy(password),1)-4) / 100_000_000}s for a reasonably powerfull computer to crack it")
             a = input("Confirm add password ? Type NO to cancel ")
             if a.lower() == "no" :
                 continue
