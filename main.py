@@ -158,9 +158,9 @@ def main():
         elif choice == "4" :
             try :
                 newdb()
-                website = input("website : ")
-                user = input('username : ')
-                password = getpass.getpass('password (will not echo) (write RANDOM for a random password): ')
+                website = input("Website : ")
+                user = input('Username : ')
+                password = getpass.getpass('Password (will not echo) (write RANDOM for a random password): ')
                 if password == "RANDOM" :
                     lenght = input("How long should the generated password should be ? : ")
                     password = secrets.token_urlsafe(int(lenght))
