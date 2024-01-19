@@ -147,7 +147,7 @@ def main():
         elif choice == "1" :
             try :
                 newdb()
-                print(Fore.RED + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA"+Fore.RESET)
+                print(Fore.YELLOW + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA"+Fore.RESET)
                 encrypt()
             except KeyboardInterrupt :
                 continue
