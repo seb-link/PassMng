@@ -27,7 +27,7 @@ def entropy(password):
     entropy = math.log2(char_set_size ** password_size)
     return entropy
 
-def newdb() :
+def newdb():
     try :
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS PasswordManager (
@@ -41,7 +41,7 @@ def newdb() :
         exit('The database is already encrypted ! %s' % e)
         
 
-def addpwd(website,username,password) :
+def addpwd(website,username,password):
     # Update the entry with the given entry_id
     try :
         cursor.execute(f"""
@@ -52,7 +52,7 @@ def addpwd(website,username,password) :
         print('The database is still encrypted !')
         print(e)
 
-def deletepwd(website,username,password) :
+def deletepwd(website,username,password):
     try :
         cursor.execute(f"""
             DELETE FROM PasswordManager WHERE
@@ -62,7 +62,7 @@ def deletepwd(website,username,password) :
         print('The database is still encrypted !')
         print(e)
 
-def fetchpwdbywebsite(website) :
+def fetchpwdbywebsite(website):
     try :
         liste = list()
         cursor.execute(f"SELECT * FROM PasswordManager")
@@ -74,7 +74,7 @@ def fetchpwdbywebsite(website) :
     except sqlite.DatabaseError as e:
         return "The database is either corrupt or encrypted or non-existent"
     
-def fetchpwd() :
+def fetchpwd():
     try :
         cursor.execute(f"SELECT * FROM PasswordManager")
         entry = cursor.fetchall()
@@ -82,7 +82,7 @@ def fetchpwd() :
     except sqlite.DatabaseError :
         return "The database is either corrupt or encrypted or non-existent"
 
-def decrypt() :
+def decrypt():
     global encrypted
     with open("pass.db","rb") as f :
         data = f.read()
@@ -90,7 +90,7 @@ def decrypt() :
         info = json.loads(data)
     except UnicodeDecodeError :
         print("either the databse is not encrypted or the database is corrupted")
-    key = getpass.getpass("Enter ciphing key (will not echo) : ")
+    key = getpass.getpass("Enter ciphing key (will not echo): ")
     try :
         ph.verify(info["hash"],key)
     except argon2.exceptions.VerifyMismatchError :
@@ -107,7 +107,7 @@ def decrypt() :
     encrypted = False
     
 
-def encrypt() :
+def encrypt():
     global encrypted
     with open("pass.db","rb") as f :
         data = f.read()
@@ -123,7 +123,7 @@ def encrypt() :
         json.dump(stored_text, f, cls=BytesEncoder)
     encrypted = True
 
-def main() :
+def main():
     print("""0.Show this panel
 1.Encrypt
 2.Decrypt
@@ -189,7 +189,7 @@ def main() :
         if choice == "6":
             deletepwd(input("Website : "),input("Username : "),input("Password : "))
 
-def innit() :
+def innit():
     os.system('cls' if os.name=='nt' else 'clear')
     global encrypted
     try:
