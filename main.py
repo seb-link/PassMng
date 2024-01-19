@@ -1,4 +1,4 @@
-import secrets
+import secrets,os
 import json
 import sqlite3 as sqlite
 from Crypto.Cipher import AES
@@ -27,25 +27,36 @@ def entropy(password):
     entropy = math.log2(char_set_size ** password_size)
     return entropy
 
-
 def newdb() :
     try :
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS PasswordManager (
+                id INTEGER PRIMARY KEY NOT NULL ,
                 website TEXT,
                 username TEXT,
                 password TEXT
             );
         """)
-    except sqlite.DatabaseError :
-        exit('The database is already encrypted !')
+    except sqlite.DatabaseError as e :
+        exit('The database is already encrypted ! %s' % e)
         
+
 def addpwd(website,username,password) :
     # Update the entry with the given entry_id
     try :
         cursor.execute(f"""
             INSERT INTO PasswordManager
             (website, username,password) VALUES(?,?,?)""",(website,username,password))
+        conn.commit()
+    except sqlite.DatabaseError as e:
+        print('The database is still encrypted !')
+        print(e)
+
+def deletepwd(website,username,password) :
+    try :
+        cursor.execute(f"""
+            DELETE FROM PasswordManager WHERE
+            website = ? AND username = ? AND password = ?""",(website,username,password))
         conn.commit()
     except sqlite.DatabaseError as e:
         print('The database is still encrypted !')
@@ -61,7 +72,7 @@ def fetchpwdbywebsite(website) :
                 liste.append(i)
         return liste
     except sqlite.DatabaseError as e:
-        return f"the database is either corrupt or encrypted or non-existent {e}"
+        return "The database is either corrupt or encrypted or non-existent"
     
 def fetchpwd() :
     try :
@@ -69,7 +80,7 @@ def fetchpwd() :
         entry = cursor.fetchall()
         return entry
     except sqlite.DatabaseError :
-        return "the database is either corrupt or encrypted or non-existent"
+        return "The database is either corrupt or encrypted or non-existent"
 
 def decrypt() :
     with open("pass.db","rb") as f :
@@ -103,52 +114,78 @@ def encrypt() :
     cipher = AES.new(key.encode(), AES.MODE_EAX)
     ciphertext, tag = cipher.encrypt_and_digest(data)
     nonce = cipher.nonce
-    stored_text = {"hash":hash,'nonce':base64.b64encode(nonce),'tag':base64.b64encode(tag),"ciphertext":base64.b64encode(ciphertext)}
+    stored_text = {"encrypted":True,"hash":hash,'nonce':base64.b64encode(nonce),'tag':base64.b64encode(tag),"ciphertext":base64.b64encode(ciphertext)}
     with open("pass.db","w") as f :
         json.dump(stored_text, f, cls=BytesEncoder)  
-print("""1.Encrypt
+
+def main() :
+    print("""1.Encrypt
 2.Decrypt
 3.View all stocked password
 4.Add password
 5.Search password by website
+6.Delete stored password
 99.Exit""")
-while 1 :
-    choice = input("""-> """)
-    if choice == "2" :
-        decrypt()
-    elif choice == "1" :
-        try :
-            newdb()
-            print(Fore.RED + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA")
-            print(Fore.RESET)
-            encrypt()
-        except KeyboardInterrupt :
-            continue
-    elif choice == "3" :   
-        print(fetchpwd())
-    elif choice == "4" :
-        try :
-            newdb()
-            website = input("website : ")
-            user = input('username : ')
-            password = getpass.getpass('password (will not echo) (write RANDOM for a random password): ')
-            if password == "RANDOM" :
-                lenght = input("How long should the generated password should be ? : ")
-                password = secrets.token_urlsafe(int(lenght))
-                print("Random password generated !")
-            if entropy(password) <= 75 :
-                print(Fore.YELLOW + "WARNING : The password entropy is low ! this migh be a sign of a weak password ! Current entropy : %s" % round(entropy(password),1))
+    while 1 :
+        choice = input("""-> """)
+        if choice == "2" :
+            decrypt()
+        elif choice == "1" :
+            try :
+                newdb()
+                print(Fore.RED + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA")
                 print(Fore.RESET)
-            print("Current entropy : %s" % round(entropy(password),1))
-            print(f"If your password is random it will take approximatively {2**(round(entropy(password),1)-4) / 100_000_000}s for a reasonably powerfull computer to crack it")
-            a = input("Confirm add password ? Type NO to cancel ")
-            if a.lower() == "no" :
+                encrypt()
+            except KeyboardInterrupt :
                 continue
-            addpwd(website,user,password)
-            del password
-        except KeyboardInterrupt :
-            continue
-    if choice == "99" :
-        exit()
-    if choice == "5" :
-        print(fetchpwdbywebsite(input("Website to search for : ")))
+        elif choice == "3" :   
+            print(fetchpwd())
+        elif choice == "4" :
+            try :
+                newdb()
+                website = input("website : ")
+                user = input('username : ')
+                password = getpass.getpass('password (will not echo) (write RANDOM for a random password): ')
+                if password == "RANDOM" :
+                    lenght = input("How long should the generated password should be ? : ")
+                    password = secrets.token_urlsafe(int(lenght))
+                    print("Random password generated !")
+                if entropy(password) <= 75 :
+                    print(Fore.YELLOW + "WARNING : The password entropy is low ! this migh be a sign of a weak password ! Current entropy : %s" % round(entropy(password),1))
+                    print(Fore.RESET)
+                print("Current entropy : %s" % round(entropy(password),1))
+                print(f"If your password is random it will take approximatively {2**(round(entropy(password),1)-4) / 100_000_000}s for a reasonably powerfull computer to crack it")
+                a = input("Confirm add password ? Type NO to cancel ")
+                if a.lower() == "no" :
+                    continue
+                addpwd(website,user,password)
+                del password
+            except KeyboardInterrupt :
+                continue
+        if choice == "99" :
+            if not encrypted :
+                print(Fore.RED + "WARNING:THE DATABASE IS NOT ENCRYPTED !")
+            a = input("Are you sure you wanna exit ? (Type YES to confirm): "+Fore.RESET)
+            if a.lower() != "yes" :
+                continue
+            exit()
+        if choice == "5" :
+            print(fetchpwdbywebsite(input("Website to search for : ")))
+        if choice == "6":
+            deletepwd(input("Website : "),input("Username : "),input("Password : "))
+
+def innit() :
+    os.system('cls' if os.name=='nt' else 'clear')
+    # banner()
+    global encrypted
+    with open("pass.db","rb") as f :
+        data = f.read()
+    try :
+        info = json.loads(data)
+        encrypted = info["encrypted"]
+    except UnicodeDecodeError :
+        encrypted = False
+    
+if __name__ == "__main__" :
+    innit()
+    main()
