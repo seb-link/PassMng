@@ -119,7 +119,8 @@ def encrypt() :
         json.dump(stored_text, f, cls=BytesEncoder)  
 
 def main() :
-    print("""1.Encrypt
+    print("""0.Show this panel
+1.Encrypt
 2.Decrypt
 3.View all stocked password
 4.Add password
@@ -127,9 +128,18 @@ def main() :
 6.Delete stored password
 99.Exit""")
     while 1 :
-        choice = input("""-> """)
+        choice = input(""">> """)
         if choice == "2" :
             decrypt()
+        elif choice == "0":
+            print("""0.Show this panel
+1.Encrypt
+2.Decrypt
+3.View all stocked password
+4.Add password
+5.Search password by website
+6.Delete stored password
+99.Exit""")
         elif choice == "1" :
             try :
                 newdb()
@@ -178,12 +188,11 @@ def innit() :
     os.system('cls' if os.name=='nt' else 'clear')
     # banner()
     global encrypted
-    with open("pass.db","rb") as f :
-        data = f.read()
-    try :
-        info = json.loads(data)
-        encrypted = info["encrypted"]
-    except UnicodeDecodeError :
+    try:
+        with open("pass.db","rb") as f :
+            info = json.load(f)
+            encrypted = info["encrypted"]
+    except:
         encrypted = False
     
 if __name__ == "__main__" :
