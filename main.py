@@ -83,6 +83,7 @@ def fetchpwd() :
         return "The database is either corrupt or encrypted or non-existent"
 
 def decrypt() :
+    global encrypted
     with open("pass.db","rb") as f :
         data = f.read()
     try :
@@ -103,8 +104,11 @@ def decrypt() :
     with open("pass.db","wb") as f :
         f.write(data)
     
+    encrypted = False
+    
 
 def encrypt() :
+    global encrypted
     with open("pass.db","rb") as f :
         data = f.read()
     key = getpass.getpass("Enter ciphing key (will not echo) : ")
@@ -116,7 +120,8 @@ def encrypt() :
     nonce = cipher.nonce
     stored_text = {"encrypted":True,"hash":hash,'nonce':base64.b64encode(nonce),'tag':base64.b64encode(tag),"ciphertext":base64.b64encode(ciphertext)}
     with open("pass.db","w") as f :
-        json.dump(stored_text, f, cls=BytesEncoder)  
+        json.dump(stored_text, f, cls=BytesEncoder)
+    encrypted = True
 
 def main() :
     print("""0.Show this panel
