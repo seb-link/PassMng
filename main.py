@@ -172,8 +172,8 @@ def main() :
                 del password
             except KeyboardInterrupt :
                 continue
-        if choice == "99":
-            if encrypted :
+        if choice == "99" :
+            if not encrypted :
                 print(Fore.RED + "WARNING:THE DATABASE IS NOT ENCRYPTED !")
             a = input("Are you sure you wanna exit ? (Type YES to confirm): "+Fore.RESET)
             if a.lower() != "yes" :
@@ -190,7 +190,8 @@ def innit() :
     try:
         with open("pass.db","rb") as f :
             info = json.load(f)
-            encrypted = info["encrypted"]
+            info["encrypted"]
+            encrypted = True
     except:
         encrypted = False
     
