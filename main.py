@@ -172,8 +172,8 @@ def main() :
                 del password
             except KeyboardInterrupt :
                 continue
-        if choice == "99" :
-            if not encrypted :
+        if choice == "99":
+            if encrypted :
                 print(Fore.RED + "WARNING:THE DATABASE IS NOT ENCRYPTED !")
             a = input("Are you sure you wanna exit ? (Type YES to confirm): "+Fore.RESET)
             if a.lower() != "yes" :
