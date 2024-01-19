@@ -186,7 +186,6 @@ def main() :
 
 def innit() :
     os.system('cls' if os.name=='nt' else 'clear')
-    # banner()
     global encrypted
     try:
         with open("pass.db","rb") as f :
