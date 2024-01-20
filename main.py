@@ -11,6 +11,40 @@ from colorama import Fore
 import pyperclip
 import time
 
+log = False
+if log:
+    import logging
+    import datetime
+    import sys
+    import os
+
+    # Obtenir le nom du fichier du script principal
+    main_script_filename = os.path.abspath(sys.argv[0])
+
+    # Configurer le module logging pour écrire dans un fichier log.log
+    logging.basicConfig(filename='log.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+    # Fonction pour le log des appels de fonction
+    def log_function_call(frame, event, arg):
+        if event == 'call':
+            function_name = frame.f_code.co_name
+            filename = frame.f_globals.get('__file__')
+            
+            # Vérifier si la fonction est définie dans le script principal
+            if filename and os.path.abspath(filename) == main_script_filename:
+                logging.info(f"{datetime.datetime.now()} - Appel de la fonction {function_name}")
+                
+                # Obtenir les noms et valeurs des arguments
+                arg_info = ', '.join([f"{arg}: {frame.f_locals[arg]}" for arg in frame.f_locals])
+                
+                # Enregistrer les noms et valeurs des arguments dans les logs
+                logging.info(f"{datetime.datetime.now()} - Arguments: {arg_info}")
+                
+        return log_function_call
+
+    # Activer le log pour toutes les fonctions
+    sys.settrace(log_function_call)
+
 class BytesEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, bytes):
