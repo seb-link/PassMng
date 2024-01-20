@@ -162,7 +162,7 @@ def encrypt():
     nonce = cipher.nonce
     stored_text = {"encrypted":True,"hash":hash,'nonce':base64.b64encode(nonce),'tag':base64.b64encode(tag),"ciphertext":base64.b64encode(ciphertext)}
     with open("pass.db","w") as f:
-        json.dump(stored_text, f, cls=BytesEncoder)
+        json.dump(stored_text, f, cls=BytesEncoder, indent=2)
     encrypted = True
 
 def main():
