@@ -226,8 +226,9 @@ def main():
             a = input("Are you sure you wanna exit ? (Type YES to confirm): "+Fore.RESET)
             if a.lower() != "yes":
                 continue
-            os.system('cls' if os.name=='nt' else 'clear')
             print('Bye!')
+            time.sleep(1)
+            os.system('cls' if os.name=='nt' else 'clear')
             exit()
         if choice == "5":
             print(fetchpwd())
@@ -235,10 +236,9 @@ def main():
             compo = fetchpwdbyindex(num)
             pyperclip.copy(compo[-1])
             print(Fore.YELLOW + "WARNING : The password will be removed from the clipboard in 10 seconds.")
-            temp = pyperclip.paste()
             pyperclip.copy(compo[-1])
             time.sleep(10)
-            pyperclip.copy(temp)
+            pyperclip.copy("")
             print("The password is deleted from clipboard!"+Fore.RESET)
         if choice == "6":
             print(fetchpwdbywebsite(input("Website to search for : ")))
