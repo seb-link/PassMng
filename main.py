@@ -40,7 +40,7 @@ def newdb():
         """)
         return 0
     except sqlite.DatabaseError as e:
-        print('The database is already encrypted ! %s' % e)
+        print('The database is already encrypted !')
         return 1
         
 
