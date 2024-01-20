@@ -175,16 +175,17 @@ def main():
 6.Search password by website
 7.Delete stored password
 99.Exit""")
-    while 1:
-        choice = input(""">> """)
-        if choice == "2":
-            try:
-                decrypt()
-            except KeyboardInterrupt:
-                print("")
-                continue
-        elif choice == "0":
-            print("""0.Show this panel
+    while 1:  
+        try:
+            choice = input(""">> """)
+            if choice == "2":
+                try:
+                    decrypt()
+                except KeyboardInterrupt:
+                    print("")
+                    continue
+            elif choice == "0":
+                print("""0.Show this panel
 1.Encrypt
 2.Decrypt
 3.View all stocked password
@@ -193,65 +194,67 @@ def main():
 6.Search password by website
 7.Delete stored password
 99.Exit""")
-        elif choice == "1":
-            try:
-                if newdb() == 0:
-                    print(Fore.YELLOW + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA" + Fore.RESET)
-                    encrypt()
-            except KeyboardInterrupt:
-                print("")
-                continue
-        elif choice == "3":   
-            print(fetchpwd())
-        elif choice == "4":
-            try:
-                newdb()
-                website = input("Website : ")
-                user = input('Username : ')
-                password = getpass.getpass('Password (will not echo) (write RANDOM for a random password): ')
-                if password == "RANDOM":
-                    lenght = input("How long should the generated password should be ? : ")
-                    password = secrets.token_urlsafe(int(lenght))
-                    print("Random password generated !")
-                if entropy(password) <= 75:
-                    print(Fore.YELLOW + "WARNING : The password entropy is low ! this migh be a sign of a weak password ! Current entropy : %s" % round(entropy(password),1))
-                    print(Fore.RESET)
-                print("Current entropy : %s" % round(entropy(password),1))
-                print(f"If your password is random it will take approximatively {2**(round(entropy(password),1)-4) / 100_000_000}s for a reasonably powerfull computer to crack it")
-                a = input("Confirm add password ? Type NO to cancel ")
-                if a.lower() == "no":
+            elif choice == "1":
+                try:
+                    if newdb() == 0:
+                        print(Fore.YELLOW + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA" + Fore.RESET)
+                        encrypt()
+                except KeyboardInterrupt:
+                    print("")
                     continue
-                addpwd(website,user,password)
-                del password
-            except KeyboardInterrupt:
-                print("")
-                continue
-        if choice == "99":
-            if not encrypted:
-                print(Fore.RED + "WARNING:THE DATABASE IS NOT ENCRYPTED !")
-            a = input("Are you sure you wanna exit ? (Type YES to confirm): " + Fore.RESET)
-            if a.lower() != "yes":
-                continue
-            print('Bye!')
-            time.sleep(1)
-            os.system('cls' if os.name=='nt' else 'clear')
-            exit()
-        if choice == "5":
-            print(fetchpwd())
-            if fetchpwd() == "The database is either corrupt or encrypted or non-existent":
-                continue
-            num = input("What is the numero : ")
-            compo = fetchpwdbyindex(num)
-            pyperclip.copy(compo[-1])
-            print(Fore.YELLOW + "WARNING : The password will be removed from the clipboard in 10 seconds.")
-            pyperclip.copy(compo[-1])
-            time.sleep(10)
-            pyperclip.copy("")
-            print("The password is deleted from clipboard!" + Fore.RESET)
-        if choice == "6":
-            print(fetchpwdbywebsite(input("Website to search for : ")))
-        if choice == "7":
-            deletepwd(input("Website : "),input("Username : "),input("Password : "))
+            elif choice == "3":   
+                print(fetchpwd())
+            elif choice == "4":
+                try:
+                    newdb()
+                    website = input("Website : ")
+                    user = input('Username : ')
+                    password = getpass.getpass('Password (will not echo) (write RANDOM for a random password): ')
+                    if password == "RANDOM":
+                        lenght = input("How long should the generated password should be ? : ")
+                        password = secrets.token_urlsafe(int(lenght))
+                        print("Random password generated !")
+                    if entropy(password) <= 75:
+                        print(Fore.YELLOW + "WARNING : The password entropy is low ! this migh be a sign of a weak password ! Current entropy : %s" % round(entropy(password),1))
+                        print(Fore.RESET)
+                    print("Current entropy : %s" % round(entropy(password),1))
+                    print(f"If your password is random it will take approximatively {2**(round(entropy(password),1)-4) / 100_000_000}s for a reasonably powerfull computer to crack it")
+                    a = input("Confirm add password ? Type NO to cancel ")
+                    if a.lower() == "no":
+                        continue
+                    addpwd(website,user,password)
+                    del password
+                except KeyboardInterrupt:
+                    print("")
+                    continue
+            if choice == "99":
+                if not encrypted:
+                    print(Fore.RED + "WARNING:THE DATABASE IS NOT ENCRYPTED !")
+                a = input("Are you sure you wanna exit ? (Type YES to confirm): " + Fore.RESET)
+                if a.lower() != "yes":
+                    continue
+                print('Bye!')
+                time.sleep(1)
+                os.system('cls' if os.name=='nt' else 'clear')
+                exit()
+            if choice == "5":
+                print(fetchpwd())
+                if fetchpwd() == "The database is either corrupt or encrypted or non-existent":
+                    continue
+                num = input("What is the numero : ")
+                compo = fetchpwdbyindex(num)
+                pyperclip.copy(compo[-1])
+                print(Fore.YELLOW + "WARNING : The password will be removed from the clipboard in 10 seconds.")
+                pyperclip.copy(compo[-1])
+                time.sleep(10)
+                pyperclip.copy("")
+                print("The password is deleted from clipboard!" + Fore.RESET)
+            if choice == "6":
+                print(fetchpwdbywebsite(input("Website to search for : ")))
+            if choice == "7":
+                deletepwd(input("Website : "),input("Username : "),input("Password : "))
+        except KeyboardInterrupt:
+            print("For exit, please type 99")
 
 def innit():
     os.system('cls' if os.name=='nt' else 'clear')
