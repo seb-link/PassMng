@@ -38,8 +38,10 @@ def newdb():
                 password TEXT
             );
         """)
+        return 0
     except sqlite.DatabaseError as e :
         print('The database is already encrypted ! %s' % e)
+        return 1
         
 
 def addpwd(website,username,password):
@@ -161,9 +163,9 @@ def main():
 99.Exit""")
         elif choice == "1" :
             try :
-                newdb()
-                print(Fore.YELLOW + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA"+Fore.RESET)
-                encrypt()
+                if newdb() == 0:
+                    print(Fore.YELLOW + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA"+Fore.RESET)
+                    encrypt()
             except KeyboardInterrupt :
                 continue
         elif choice == "3" :   
