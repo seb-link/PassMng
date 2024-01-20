@@ -11,6 +11,7 @@ from colorama import Fore
 import pyperclip
 import time
 
+
 log = False
 if log:
     import logging
@@ -44,6 +45,8 @@ if log:
 
     # Activer le log pour toutes les fonctions
     sys.settrace(log_function_call)
+
+    
 
 class BytesEncoder(json.JSONEncoder):
     def default(self, obj):
