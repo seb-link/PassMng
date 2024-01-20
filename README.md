@@ -24,7 +24,7 @@ A simple password manager script written in Python that uses SQLite for storing 
    - `4` - Add a new password entry to the database.
    - `5` - Select a password to copy with his index.
    - `6` - Search password by website.
-   - `6` - Delete stored password.
+   - `7` - Delete stored password.
    - `99` - Exit.
 
 3. Follow the instructions for each option:
