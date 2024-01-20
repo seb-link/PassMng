@@ -192,7 +192,7 @@ def main():
         elif choice == "1":
             try:
                 if newdb() == 0:
-                    print(Fore.YELLOW + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA"+Fore.RESET)
+                    print(Fore.YELLOW + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA" + Fore.RESET)
                     encrypt()
             except KeyboardInterrupt:
                 continue
@@ -223,7 +223,7 @@ def main():
         if choice == "99":
             if not encrypted:
                 print(Fore.RED + "WARNING:THE DATABASE IS NOT ENCRYPTED !")
-            a = input("Are you sure you wanna exit ? (Type YES to confirm): "+Fore.RESET)
+            a = input("Are you sure you wanna exit ? (Type YES to confirm): " + Fore.RESET)
             if a.lower() != "yes":
                 continue
             print('Bye!')
@@ -241,7 +241,7 @@ def main():
             pyperclip.copy(compo[-1])
             time.sleep(10)
             pyperclip.copy("")
-            print("The password is deleted from clipboard!"+Fore.RESET)
+            print("The password is deleted from clipboard!" + Fore.RESET)
         if choice == "6":
             print(fetchpwdbywebsite(input("Website to search for : ")))
         if choice == "7":
