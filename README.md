@@ -14,6 +14,7 @@ A simple password manager script written in Python that uses SQLite for storing 
 1. Run the script:
    ```bash
    python main.py
+   ```
 
 2. You will be prompted with options:
    - `1` - Encrypt the password database (creates a new encrypted database or re-encrypts an existing one).
