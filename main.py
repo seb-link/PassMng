@@ -178,7 +178,11 @@ def main():
     while 1:
         choice = input(""">> """)
         if choice == "2":
-            decrypt()
+            try:
+                decrypt()
+            except KeyboardInterrupt:
+                print("")
+                continue
         elif choice == "0":
             print("""0.Show this panel
 1.Encrypt
