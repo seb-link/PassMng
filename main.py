@@ -101,7 +101,7 @@ def fetchpwdbywebsite(website):
         for i in entry:
             if website in i[1]:
                 liste.append(i)
-        return liste
+        return json.dumps(liste, indent=2)
     except sqlite.DatabaseError as e:
         return "The database is either corrupt or encrypted or non-existent"
     
