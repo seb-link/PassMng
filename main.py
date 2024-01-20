@@ -9,6 +9,7 @@ import math
 import argon2
 from colorama import Fore
 import pyperclip
+import time
 
 class BytesEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -68,9 +69,20 @@ def fetchpwdbywebsite(website):
         cursor.execute(f"SELECT * FROM PasswordManager")
         entry = cursor.fetchall()
         for i in entry :
-            if i[0] == website :
+            if i[1] == website :
                 liste.append(i)
         return liste
+    except sqlite.DatabaseError as e:
+        return "The database is either corrupt or encrypted or non-existent"
+    
+def fetchpwdbyindex(index):
+    try :
+        cursor.execute(f"SELECT * FROM PasswordManager")
+        entry = cursor.fetchall()
+        for i in entry :
+            if str(i[0]) == str(index):
+                return i
+        return ()
     except sqlite.DatabaseError as e:
         return "The database is either corrupt or encrypted or non-existent"
     
@@ -84,12 +96,12 @@ def fetchpwd():
 
 def decrypt():
     global encrypted
-    with open("pass.db","rb") as f :
-        data = f.read()
     try :
-        info = json.loads(data)
+        with open("pass.db","rb") as f :
+            info = json.load(f)
     except UnicodeDecodeError :
         print("either the databse is not encrypted or the database is corrupted")
+        return
     key = getpass.getpass("Enter ciphing key (will not echo): ")
     try :
         ph.verify(info["hash"],key)
@@ -129,8 +141,9 @@ def main():
 2.Decrypt
 3.View all stocked password
 4.Add password
-5.Search password by website
-6.Delete stored password
+5.Select a password
+6.Search password by website
+7.Delete stored password
 99.Exit""")
     while 1 :
         choice = input(""">> """)
@@ -142,8 +155,9 @@ def main():
 2.Decrypt
 3.View all stocked password
 4.Add password
-5.Search password by website
-6.Delete stored password
+5.Select a password
+6.Search password by website
+7.Delete stored password
 99.Exit""")
         elif choice == "1" :
             try :
@@ -182,10 +196,21 @@ def main():
             a = input("Are you sure you wanna exit ? (Type YES to confirm): "+Fore.RESET)
             if a.lower() != "yes" :
                 continue
+            print('Bye!')
             exit()
-        if choice == "5" :
+        if choice == "5":
+            print(fetchpwd())
+            num = input("What is the numero : ")
+            compo = fetchpwdbyindex(num)
+            pyperclip.copy(compo[-1])
+            print(Fore.YELLOW + "WARNING : The password will be removed from the clipboard in 10 seconds.")
+            pyperclip.copy(compo[-1])
+            time.sleep(10)
+            pyperclip.copy("")
+            print("The password is deleted from clipboard!"+Fore.RESET)
+        if choice == "6" :
             print(fetchpwdbywebsite(input("Website to search for : ")))
-        if choice == "6":
+        if choice == "7":
             deletepwd(input("Website : "),input("Username : "),input("Password : "))
 
 def innit():
