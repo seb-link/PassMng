@@ -120,7 +120,7 @@ def fetchpwd():
     try:
         cursor.execute(f"SELECT * FROM PasswordManager")
         entry = cursor.fetchall()
-        return entry
+        return json.dumps(entry, indent=2)
     except sqlite.DatabaseError:
         return "The database is either corrupt or encrypted or non-existent"
 
@@ -226,6 +226,7 @@ def main():
             a = input("Are you sure you wanna exit ? (Type YES to confirm): "+Fore.RESET)
             if a.lower() != "yes":
                 continue
+            os.system('cls' if os.name=='nt' else 'clear')
             print('Bye!')
             exit()
         if choice == "5":
