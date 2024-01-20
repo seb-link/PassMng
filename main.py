@@ -195,6 +195,7 @@ def main():
                     print(Fore.YELLOW + "WARNING LOSING ENCRYPTION KEY CAN RESULT INTO LOSING ALL STORED PASSWORD. NO KEY = NO DATA" + Fore.RESET)
                     encrypt()
             except KeyboardInterrupt:
+                print("")
                 continue
         elif choice == "3":   
             print(fetchpwd())
@@ -219,6 +220,7 @@ def main():
                 addpwd(website,user,password)
                 del password
             except KeyboardInterrupt:
+                print("")
                 continue
         if choice == "99":
             if not encrypted:
