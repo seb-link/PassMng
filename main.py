@@ -33,20 +33,20 @@ if log:
             
             # Vérifier si la fonction est définie dans le script principal
             if filename and os.path.abspath(filename) == main_script_filename:
-                logging.info(f"{datetime.datetime.now()} - Appel de la fonction {function_name}")
+                logging.info(f"{datetime.datetime.now()} - func {function_name}")
                 
                 # Obtenir les noms et valeurs des arguments
                 arg_info = ', '.join([f"{arg}: {frame.f_locals[arg]}" for arg in frame.f_locals])
                 
                 # Enregistrer les noms et valeurs des arguments dans les logs
-                logging.info(f"{datetime.datetime.now()} - Arguments: {arg_info}")
+                logging.info(f"{datetime.datetime.now()} - args: {arg_info}")
                 
         return log_function_call
 
     # Activer le log pour toutes les fonctions
     sys.settrace(log_function_call)
 
-    
+
 
 class BytesEncoder(json.JSONEncoder):
     def default(self, obj):
