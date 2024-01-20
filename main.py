@@ -266,7 +266,4 @@ def innit():
     
 if __name__ == "__main__":
     innit()
-    try:
-        main()
-    except KeyboardInterrupt:
-        pass
+    main()
