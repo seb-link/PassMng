@@ -99,7 +99,7 @@ def fetchpwdbywebsite(website):
         cursor.execute(f"SELECT * FROM PasswordManager")
         entry = cursor.fetchall()
         for i in entry:
-            if i[1] == website:
+            if website in i[1]:
                 liste.append(i)
         return liste
     except sqlite.DatabaseError as e:
