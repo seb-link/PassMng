@@ -39,7 +39,7 @@ def newdb():
             );
         """)
     except sqlite.DatabaseError as e :
-        exit('The database is already encrypted ! %s' % e)
+        print('The database is already encrypted ! %s' % e)
         
 
 def addpwd(website,username,password):
