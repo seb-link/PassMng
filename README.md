@@ -7,6 +7,7 @@ A simple password manager script written in Python that uses SQLite for storing 
 - `argon2-cffi` library (install using `pip install argon2-cffi`)
 - `pycryptodome` library (install using `pip install pycryptodome`)
 - `colorama` library (install using `pip install colorama`)
+- `pyperclip` library (install using `pip install pip install pyperclip`)
 
 ## Usage
 

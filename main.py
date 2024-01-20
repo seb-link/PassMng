@@ -8,6 +8,7 @@ import base64
 import math
 import argon2
 from colorama import Fore
+import pyperclip
 
 class BytesEncoder(json.JSONEncoder):
     def default(self, obj):
