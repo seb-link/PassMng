@@ -53,7 +53,6 @@ def addpwd(website,username,password):
         conn.commit()
     except sqlite.DatabaseError as e:
         print('The database is still encrypted !')
-        print(e)
 
 def deletepwd(website,username,password):
     try :
@@ -63,7 +62,6 @@ def deletepwd(website,username,password):
         conn.commit()
     except sqlite.DatabaseError as e:
         print('The database is still encrypted !')
-        print(e)
 
 def fetchpwdbywebsite(website):
     try :
