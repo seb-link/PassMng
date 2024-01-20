@@ -232,6 +232,8 @@ def main():
             exit()
         if choice == "5":
             print(fetchpwd())
+            if fetchpwd() == "The database is either corrupt or encrypted or non-existent":
+                continue
             num = input("What is the numero : ")
             compo = fetchpwdbyindex(num)
             pyperclip.copy(compo[-1])
