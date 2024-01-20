@@ -17,6 +17,7 @@ A simple password manager script written in Python that uses SQLite for storing 
    ```
 
 2. You will be prompted with options:
+   - `0` - Show commands.
    - `1` - Encrypt the password database (creates a new encrypted database or re-encrypts an existing one).
    - `2` - Decrypt the password database (requires the encryption key).
    - `3` - View current passwords in the database.
