@@ -12,8 +12,9 @@ import pyperclip
 import time
 
 
-log = False
-if log:
+debug = False
+
+if debug:
     import logging
     import datetime
     import sys
@@ -165,16 +166,12 @@ def encrypt():
         json.dump(stored_text, f, cls=BytesEncoder, indent=2)
     encrypted = True
 
+
+def print_menu() :
+    print(f"""0.Show this panel\n1.Encrypt\n2.Decrypt\n3.View all stocked password\n4.Add password\n5.Select a password\n6.Search password by website\n7.Delete stored password\n{Fore.RED}1357.Shred Database{Fore.RESET}\n99.Exit""")
+
 def main():
-    print("""0.Show this panel
-1.Encrypt
-2.Decrypt
-3.View all stocked password
-4.Add password
-5.Select a password
-6.Search password by website
-7.Delete stored password
-99.Exit""")
+    print_menu()
     while 1:  
         try:
             choice = input(""">> """)
@@ -185,15 +182,15 @@ def main():
                     print("")
                     continue
             elif choice == "0":
-                print("""0.Show this panel
-1.Encrypt
-2.Decrypt
-3.View all stocked password
-4.Add password
-5.Select a password
-6.Search password by website
-7.Delete stored password
-99.Exit""")
+                print_menu()
+            elif choice == "1357" :
+
+                with open("pass.db",'w') as f:
+                    for i in range(32,42) :
+                        f.write(secrets.token_urlsafe(i))
+                
+                os.remove("pass.db")
+
             elif choice == "1":
                 try:
                     if newdb() == 0:
@@ -256,7 +253,7 @@ def main():
         except KeyboardInterrupt:
             print("For exit, please type 99")
 
-def innit():
+def init():
     os.system('cls' if os.name=='nt' else 'clear')
     global encrypted
     try:
@@ -268,5 +265,5 @@ def innit():
         encrypted = False
     
 if __name__ == "__main__":
-    innit()
+    init()
     main()

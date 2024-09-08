@@ -1,0 +1,4 @@
+argon2-cffi
+pycryptodome
+colorama
+pyperclip
