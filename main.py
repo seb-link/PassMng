@@ -142,7 +142,7 @@ def decrypt():
         return
     key = sha256(key.encode()).hexdigest()
     key = key[:32]
-    cipher = AES.new(key.encode(), AES.MODE_EAX, base64.b64decode(info["nonce"]))
+    cipher = AES.new(key.encode(), AES.MODE_GCM, base64.b64decode(info["nonce"]))
     data = cipher.decrypt_and_verify(base64.b64decode(info["ciphertext"]), base64.b64decode(info["tag"]))
     with open("pass.db","wb") as f:
         f.write(data)
@@ -158,7 +158,7 @@ def encrypt():
     hash = ph.hash(key)
     key = sha256(key.encode()).hexdigest()
     key = key[:32]
-    cipher = AES.new(key.encode(), AES.MODE_EAX)
+    cipher = AES.new(key.encode(), AES.MODE_GCM)
     ciphertext, tag = cipher.encrypt_and_digest(data)
     nonce = cipher.nonce
     stored_text = {"encrypted":True,"hash":hash,'nonce':base64.b64encode(nonce),'tag':base64.b64encode(tag),"ciphertext":base64.b64encode(ciphertext)}
