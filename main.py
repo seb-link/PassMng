@@ -142,7 +142,12 @@ def decrypt():
         return
     key = sha256(key.encode()).hexdigest()
     key = key[:32]
-    cipher = AES.new(key.encode(), AES.MODE_GCM, base64.b64decode(info["nonce"]))
+    try :
+        if info["mode"] == "GCM" :
+            cipher = AES.new(key.encode(), AES.MODE_GCM, base64.b64decode(info["nonce"]))
+    except KeyError :
+        cipher = AES.new(key.encode(), AES.MODE_EAX, base64.b64decode(info["nonce"]))
+        print("Ciphering mode is AES-EAX switching to GCM on next encryption.")
     data = cipher.decrypt_and_verify(base64.b64decode(info["ciphertext"]), base64.b64decode(info["tag"]))
     with open("pass.db","wb") as f:
         f.write(data)
@@ -161,7 +166,7 @@ def encrypt():
     cipher = AES.new(key.encode(), AES.MODE_GCM)
     ciphertext, tag = cipher.encrypt_and_digest(data)
     nonce = cipher.nonce
-    stored_text = {"encrypted":True,"hash":hash,'nonce':base64.b64encode(nonce),'tag':base64.b64encode(tag),"ciphertext":base64.b64encode(ciphertext)}
+    stored_text = {"Mode":"GCM","encrypted":True,"hash":hash,'nonce':base64.b64encode(nonce),'tag':base64.b64encode(tag),"ciphertext":base64.b64encode(ciphertext)}
     with open("pass.db","w") as f:
         json.dump(stored_text, f, cls=BytesEncoder, indent=2)
     encrypted = True
